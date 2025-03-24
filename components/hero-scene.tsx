@@ -1,8 +1,8 @@
 "use client"
 
 import { Canvas } from '@react-three/fiber'
-import { CameraModel } from './camera-model'
 import { Environment, OrbitControls } from '@react-three/drei'
+import { EarthScene } from './earth-scene'
 
 export function HeroScene() {
   return (
@@ -11,10 +11,11 @@ export function HeroScene() {
         camera={{ position: [0, 0, 5], fov: 45 }}
         style={{ position: 'absolute', width: '100%', height: '100%', pointerEvents: 'none' }}
       >
-        <ambientLight intensity={0.8} />
-        <directionalLight position={[10, 10, 5]} intensity={1.5} />
-        <CameraModel />
-        <Environment preset="city" />
+        <color attach="background" args={['#000']} />
+        <fog attach="fog" args={['#000', 5, 18]} />
+        <ambientLight intensity={0.1} />
+        <directionalLight position={[5, 5, 5]} intensity={0.5} />
+        <EarthScene />
         <OrbitControls
           enableZoom={false}
           enablePan={false}
