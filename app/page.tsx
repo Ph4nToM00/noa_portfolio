@@ -11,6 +11,7 @@ import { VideoModal } from '@/components/video-modal'
 import { useState, useEffect } from 'react'
 import { LoadingScreen } from '@/components/loading-screen'
 import { Suspense } from 'react'
+import { FallbackBackground } from '@/components/fallback-background'
 
 //Images
 import About from "../public/images/about.webp";
@@ -42,6 +43,7 @@ export default function Home() {
   const [started, setStarted] = useState(false)
   const [ready, setReady] = useState(false)
   const [sceneLoaded, setSceneLoaded] = useState(false)
+  const [sceneFailed, setSceneFailed] = useState(false) 
   const [heroRef, heroInView] = useInView({
     triggerOnce: false,
     threshold: 0.1,
@@ -107,6 +109,17 @@ export default function Home() {
       }, 500)
       return () => clearTimeout(timeout)
     }
+    
+    // Timer de secours pour démarrer le site même si la scène ne se charge pas
+    const fallbackTimer = setTimeout(() => {
+      console.log('Scene loading fallback timer triggered')
+      if (!sceneLoaded) {
+        setSceneFailed(true)
+        setStarted(true)
+      }
+    }, 12000)
+    
+    return () => clearTimeout(fallbackTimer)
   }, [sceneLoaded])
 
   return (
@@ -119,9 +132,13 @@ export default function Home() {
           ref={heroRef}
           className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-b from-blue-900/20 dark:to-background"
         >
-          <Suspense fallback={null}>
-            <HeroScene onLoaded={() => setSceneLoaded(true)} />
-          </Suspense>
+          {!sceneFailed ? (
+            <Suspense fallback={<FallbackBackground />}>
+              <HeroScene onLoaded={() => setSceneLoaded(true)} />
+            </Suspense>
+          ) : (
+            <FallbackBackground />
+          )}
           <div className="absolute inset-0 w-full h-full">
             <div className="absolute inset-0 bg-grid-white/[0.09] bg-[size:50px_50px]" />
           </div>
@@ -138,7 +155,7 @@ export default function Home() {
               prêt à apporter ma créativité à votre équipe.
             </h1>
             <p className="text-md md:text-xl mb-8 text-muted-foreground max-w-3xl mx-auto">
-            🎯 À la recherche d'une alternance/stage en montage, motion design et 3D 🚀
+            🎯 À la recherche d&apos;une alternance/stage en montage, motion design et 3D 🚀
             </p>
             <Button
               size="lg"
@@ -177,10 +194,10 @@ export default function Home() {
               <div>
                 <h2 className="text-3xl font-bold mb-6">À propos de moi</h2>
                 <p className="text-muted-foreground mb-6">
-                  Passionné par l'audiovisuel, je suis actuellement en première année de BTS Audiovisuel. J'aime particulièrement le montage vidéo, le Motion Design et la 3D. Mon parcours est guidé par une volonté constante d'apprendre et d'innover dans ce domaine dynamique.
+                  Passionné par l&apos;audiovisuel, je suis actuellement en première année de BTS Audiovisuel. J&apos;aime particulièrement le montage vidéo, le Motion Design et la 3D. Mon parcours est guidé par une volonté constante d&apos;apprendre et d&apos;innover dans ce domaine dynamique.
                   <br />
                   <br />
-                  Ma formation m'a permis de développer une solide base technique, combinant créativité et maîtrise des outils professionnels. Je m'épanouis particulièrement dans la réalisation de projets qui permettent de raconter des histoires impactantes et de transmettre des émotions.
+                  Ma formation m&apos;a permis de développer une solide base technique, combinant créativité et maîtrise des outils professionnels. Je m&apos;épanouis particulièrement dans la réalisation de projets qui permettent de raconter des histoires impactantes et de transmettre des émotions.
                   <br />
                   <br />
                   Mon approche professionnelle se caractérise par un mélange de technique et de sensibilité artistique, toujours avec le souci du détail. Afin de continuer à développer mes compétences techniques et créatives.
@@ -309,7 +326,7 @@ export default function Home() {
                   <ul className="space-y-6">
                     <li className="flex items-center gap-4">
                       <div className="w-2 h-2 rounded-full bg-blue-500 flex-shrink-0" />
-                      <span>Travail d'équipe</span>
+                      <span>Travail d&apos;équipe</span>
                     </li>
                     <li className="flex items-center gap-4">
                       <div className="w-2 h-2 rounded-full bg-blue-500 flex-shrink-0" />

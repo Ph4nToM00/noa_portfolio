@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
@@ -11,16 +11,27 @@ useGLTF.preload('/Scenes/earth.glb')
 export function EarthScene() {
   const earthRef = useRef<THREE.Group>(null)
   const atmosphereRef = useRef<THREE.Mesh>(null)
+  const [modelError, setModelError] = useState(false)
   
-  const { scene } = useGLTF('/Scenes/earth.glb')
+  const { scene, errors } = useGLTF('/Scenes/earth.glb', undefined, 
+    (e) => {
+      console.error('Erreur lors du chargement du modèle Earth:', e)
+      setModelError(true)
+    }
+  )
 
   useEffect(() => {
     if (scene) {
-      scene.traverse((child) => {
-        if (child instanceof THREE.Mesh) {
-          child.frustumCulled = false
-        }
-      })
+      try {
+        scene.traverse((child) => {
+          if (child instanceof THREE.Mesh) {
+            child.frustumCulled = false
+          }
+        })
+      } catch (err) {
+        console.error('Erreur lors de la traversée de la scène:', err)
+        setModelError(true)
+      }
     }
   }, [scene])
   
@@ -33,6 +44,32 @@ export function EarthScene() {
       atmosphereRef.current.rotation.y += 0.0005
     }
   })
+
+  // Si une erreur s'est produite, afficher une sphère basique à la place du modèle
+  if (modelError) {
+    return (
+      <>
+        <group ref={earthRef} position={[0, 0, 0]} scale={[1.2, 1.2, 1.2]} rotation={[0.4, 0, 0]}>
+          <mesh>
+            <sphereGeometry args={[1, 32, 32]} />
+            <meshStandardMaterial color="#2060ff" />
+          </mesh>
+          <mesh ref={atmosphereRef} scale={[1.1, 1.1, 1.1]}>
+            <sphereGeometry args={[1, 32, 32]} />
+            <meshPhongMaterial 
+              color="#4a90ff"
+              transparent={true}
+              opacity={0.15}
+              side={THREE.BackSide}
+              blending={THREE.AdditiveBlending}
+            />
+          </mesh>
+        </group>
+        <directionalLight position={[4, 2, 4]} intensity={1.2} color="#fffaea" />
+        <ambientLight intensity={0.08} color="#102046" />
+      </>
+    )
+  }
 
   return (
     <>

@@ -11,12 +11,26 @@ interface HeroSceneProps {
 
 export function HeroScene({ onLoaded }: HeroSceneProps) {
   const { progress, active } = useProgress()
+  const [isLoadedTriggered, setIsLoadedTriggered] = useState(false)
 
   useEffect(() => {
-    if (progress === 100 && !active) {
+    if (progress === 100 && !active && !isLoadedTriggered) {
+      setIsLoadedTriggered(true)
       onLoaded()
     }
-  }, [progress, active, onLoaded])
+    
+    // Timer de secours pour assurer que onLoaded sera appelé après 10 secondes
+    // même si les ressources ne se chargent pas correctement
+    const fallbackTimer = setTimeout(() => {
+      console.log('HeroScene fallback timer triggered, progress:', progress)
+      if (!isLoadedTriggered) {
+        setIsLoadedTriggered(true)
+        onLoaded()
+      }
+    }, 10000)
+    
+    return () => clearTimeout(fallbackTimer)
+  }, [progress, active, onLoaded, isLoadedTriggered])
 
   return (
     <div className="absolute inset-0 w-full h-full -z-10">
