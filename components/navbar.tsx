@@ -61,10 +61,11 @@ export function Navbar() {
     <>
       <style dangerouslySetInnerHTML={{ __html: neonStyles }} />
       <nav
-        className={`fixed w-full z-50 transition-all duration-300 ${isScrolled
-            ? 'dark:bg-background/60 backdrop-blur-md shadow-lg'
-            : 'bg-background'
-          }`}
+        className={`fixed w-full z-50 transition-all duration-300 ${
+          isScrolled
+            ? 'bg-background/80 backdrop-blur-md shadow-lg dark:bg-background/40'
+            : 'bg-background dark:bg-background/40'
+        }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
@@ -85,7 +86,24 @@ export function Navbar() {
                     priority
                   />
                 </div>
-                <span className="ml-2 text-xl font-bold dark:text-white text-black">Noa Opigez</span>
+                <span className="ml-2 text-xl font-bold dark:text-white text-black">
+                  <motion.span
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="inline-block"
+                  >
+                    Noa
+                  </motion.span>
+                  <motion.span
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.2 }}
+                    className="inline-block"
+                  >
+                    {" "}Opigez
+                  </motion.span>
+                </span>
               </div>
             </Link>
 

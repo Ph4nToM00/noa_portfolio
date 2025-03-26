@@ -4,9 +4,9 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  images: { 
+  images: {
+    domains: ['noaopigez.fr'],
     unoptimized: true,
-    domains: ['localhost'],
     remotePatterns: [
       {
         protocol: 'https',

@@ -1,10 +1,23 @@
 "use client"
 
 import { Canvas } from '@react-three/fiber'
-import { Environment, OrbitControls } from '@react-three/drei'
+import { OrbitControls, useProgress } from '@react-three/drei'
 import { EarthScene } from './earth-scene'
+import { useState, useEffect } from 'react'
 
-export function HeroScene() {
+interface HeroSceneProps {
+  onLoaded: () => void;
+}
+
+export function HeroScene({ onLoaded }: HeroSceneProps) {
+  const { progress, active } = useProgress()
+
+  useEffect(() => {
+    if (progress === 100 && !active) {
+      onLoaded()
+    }
+  }, [progress, active, onLoaded])
+
   return (
     <div className="absolute inset-0 w-full h-full -z-10">
       <Canvas

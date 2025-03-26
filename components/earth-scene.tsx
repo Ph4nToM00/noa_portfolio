@@ -1,16 +1,28 @@
 "use client"
 
-import { useRef } from 'react'
+import { useRef, useEffect } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { useGLTF, Environment } from '@react-three/drei'
+import { useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
+
+// Préchargement du modèle
+useGLTF.preload('/Scenes/earth.glb')
 
 export function EarthScene() {
   const earthRef = useRef<THREE.Group>(null)
-  const { scene } = useGLTF('/Scenes/earth.glb')
-  
-  // Ajout d'une atmosphère lumineuse
   const atmosphereRef = useRef<THREE.Mesh>(null)
+  
+  const { scene } = useGLTF('/Scenes/earth.glb')
+
+  useEffect(() => {
+    if (scene) {
+      scene.traverse((child) => {
+        if (child instanceof THREE.Mesh) {
+          child.frustumCulled = false
+        }
+      })
+    }
+  }, [scene])
   
   useFrame((state) => {
     if (earthRef.current) {
