@@ -1,35 +1,75 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
-/node_modules
-/.pnp
+# ===============================
+# Node & Package Managers
+# ===============================
+node_modules/
+package-lock.json
+yarn.lock
+.pnpm-debug.log
+.pnp/
 .pnp.js
+.bolt/
 
-# testing
-/coverage
+# ===============================
+# Testing
+# ===============================
+coverage/
+*.lcov
 
-# next.js
-/.next/
-/out/
+# ===============================
+# Build Outputs
+# ===============================
+.next/
+out/
+build/
+dist/
 
-# production
-/build
+# ===============================
+# TypeScript
+# ===============================
+*.tsbuildinfo
+next-env.d.ts
 
-# misc
-.DS_Store
-*.pem
+# ===============================
+# Environment Variables
+# ===============================
+.env
+.env.*.local
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
-# debug
+# ===============================
+# Logs & Debug
+# ===============================
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
 
-# local env files
-.env*.local
+# ===============================
+# OS & Editor Specific
+# ===============================
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
 
-# vercel
-.vercel
+# ===============================
+# Vercel & Deployment
+# ===============================
+.vercel/
+.netlify/
 
-# typescript
-*.tsbuildinfo
-next-env.d.ts
+# ===============================
+# Misc
+# ===============================
+*.pem
+*.log
+
+# ===============================
+# Custom Folders (si non utiles)
+# ===============================
+bolt/
+plop/
